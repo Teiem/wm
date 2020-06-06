@@ -67,6 +67,9 @@ const wm = (contentNode, {resizable = true, minWidth = 100, minHeight = 100, res
     const _applyStyleWindow = () => {
         windowNode.style.willChange = _state.isChanging ? "transform, width, height" : "";
 
+        // does this cause some error?
+        if (!_state.isChanging) return;
+
         preview.style.opacity = +_state.previewIsActive;
         if (_state.previewIsActive && _NeedsUpdate.preview) {
             _NeedsUpdate.preview = false;
@@ -87,12 +90,12 @@ const wm = (contentNode, {resizable = true, minWidth = 100, minHeight = 100, res
 
             const minWidthReached = _nextPos.width <= minWidth;
             const minHeightReached = _nextPos.height <= minHeight;
-    
+
             const newWindowData = {
                 width: minWidthReached ? minWidth :  _nextPos.width,
                 height: minHeightReached ? minHeight :  _nextPos.height,
-                offsetX: !_startState.isDragging && minWidthReached ? _windowData.offsetX : _nextPos.offsetX,
-                offsetY: !_startState.isDragging && minHeightReached ? _windowData.offsetY : _nextPos.offsetY,
+                offsetX: !_startState.isDragging && minWidthReached ? _startState.x - _startState.relX + _startState.width - minWidth : _nextPos.offsetX,
+                offsetY: !_startState.isDragging && minHeightReached ? _startState.y - _startState.relY + _startState.height - minHeight : _nextPos.offsetY,
             }
 
             _windowData = {...newWindowData, isMaximized: false};
