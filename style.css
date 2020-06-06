@@ -1,0 +1,64 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    background-color: #333333;
+    overflow: hidden;
+    background-image: url("bg.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+#window {
+    width: 200px;
+    height: 200px;
+    background-color: #183c52;
+}
+
+._wm {
+    z-index: calc(var(--zIndex));
+    position: relative;
+    user-select: none;
+}
+
+._wm > ._wmResizer  {
+    position: absolute;
+    content: "";
+    display: block;
+    width: calc(100% + var(--resizeWidth));
+    height: calc(100% + var(--resizeWidth));
+    transform: translate(calc(var(--resizeWidth) / -2), calc(var(--resizeWidth) / -2));
+    transform-origin: 50% 50%;
+    /* background-color: red; */
+    z-index: calc(var(--zIndex) - 1);
+}
+
+._wmPreview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+._wmPreview._wmPreviewTransition {
+    transition: all 0.15s ease-out;
+    transition-property: transform, width, height;
+}
+
+._wmPreview::before {
+    content: "";
+    display: block;
+    margin: 0.75em;
+    width: calc(100% - 1.5em);
+    height: calc(100% - 1.5em);
+    border: 1px solid #fff2;
+    background-color: #fff1;
+}
+
+/* bug? gets disabled during transitions */
+._wmPreview._wmPreviewBlurBg::before {
+    backdrop-filter: blur(.75em);
+}
