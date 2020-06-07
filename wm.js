@@ -94,8 +94,18 @@ const wm = (contentNode, {resizable = true, minWidth = 100, minHeight = 100, res
             const newWindowData = {
                 width: minWidthReached ? minWidth :  _nextPos.width,
                 height: minHeightReached ? minHeight :  _nextPos.height,
-                offsetX: !_startState.isDragging && minWidthReached ? _startState.x - _startState.relX + _startState.width - minWidth : _nextPos.offsetX,
-                offsetY: !_startState.isDragging && minHeightReached ? _startState.y - _startState.relY + _startState.height - minHeight : _nextPos.offsetY,
+
+                offsetX: !_startState.isDragging && minWidthReached 
+                    ? _startState.isLeft 
+                        ? _startState.x - _startState.relX + _startState.width - minWidth 
+                        : _windowData.offsetX 
+                    : _nextPos.offsetX,
+
+                offsetY: !_startState.isDragging && minHeightReached 
+                    ? _startState.isTop 
+                        ? _startState.y - _startState.relY + _startState.height - minHeight 
+                        : _windowData.offsetY 
+                    : _nextPos.offsetY,
             }
 
             _windowData = {...newWindowData, isMaximized: false};
@@ -193,6 +203,10 @@ const wm = (contentNode, {resizable = true, minWidth = 100, minHeight = 100, res
         _startState.isLeft = _startState.relX <= 0;
         _startState.isRight = _startState.relX >= _windowData.width;
         _startState.isBottom = _startState.relY >= _windowData.height;
+
+        // only necessary if last was top/left and new if bottom/right to reset _nextPos.offsetX/Y
+        _nextPos.offsetX = e.clientX - _startState.relX;
+        _nextPos.offsetY = e.clientY - _startState.relY;
 
         _startState.isDragging = false;
     };
